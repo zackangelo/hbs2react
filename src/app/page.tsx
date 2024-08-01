@@ -12,6 +12,7 @@ const MONACO_OPTIONS = {
   automaticLayout: true,
   fontSize: 17,
   minimap: { enabled: false },
+  wordwrap: "on",
   lineNumbersMinChars: 2,
 };
 
