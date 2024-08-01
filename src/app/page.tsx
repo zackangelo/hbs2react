@@ -4,6 +4,7 @@ import { Editor } from "@monaco-editor/react";
 import { read } from "fs";
 import { useCallback, useState } from "react";
 import SSE from "./sse";
+import { SparklesIcon } from "@heroicons/react/24/outline";
 
 const DEFAULT_HBS = `<div class="entry">\n\t{{#if author}}\n\t\t<h1>{{firstName}} {{lastName}}</h1>\n\t{{/if}}\n</div>\n`;
 
@@ -25,6 +26,7 @@ export default function Home() {
   const [hbsCode, setHbsCode] = useState(DEFAULT_HBS);
   const [reactOutput, setReactOutput] = useState("");
   const [isCoverting, setConverting] = useState(false);
+  const buttonColor = "red";
 
   const convert = useCallback(() => {
     let payload = JSON.stringify({ params: { handlebars: hbsCode } });
@@ -104,7 +106,17 @@ export default function Home() {
         <div>Powered by Mixlayer</div>
         <div className="flex-1"></div>
         <div>
-          <button onClick={convert}>Convert</button>
+          {!isCoverting && (
+            <button
+              onClick={convert}
+              className="group flex h-min items-center disabled:opacity-50 justify-center ring-none rounded-lg shadow-lg font-semibold py-2 px-4 font-dm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-red-500 border-b-red-700  ring-white text-white border-b-4  active:bg-red-800 active:text-gray-300 focus-visible:outline-red-500 text-sm sm:text-base dark:bg-gray-700 dark:border-gray-700 dark:border-b-gray-900"
+            >
+              <SparklesIcon className="w-6 mr-2" />
+              <span className="text-lg">Convert</span>
+            </button>
+          )}
+
+          {isCoverting && <div>Converting...</div>}
         </div>
       </div>
     </div>
