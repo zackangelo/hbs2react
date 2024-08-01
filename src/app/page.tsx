@@ -12,7 +12,7 @@ const MONACO_OPTIONS = {
   automaticLayout: true,
   fontSize: 17,
   minimap: { enabled: false },
-  wordwrap: "on",
+  wordWrap: "on",
   lineNumbersMinChars: 2,
 };
 
@@ -85,6 +85,7 @@ export default function Home() {
                 setHbsCode(value);
               }
             }}
+            //@ts-ignore
             options={MONACO_OPTIONS}
           />
         </div>
@@ -94,6 +95,7 @@ export default function Home() {
             width="100%"
             defaultLanguage="javascript"
             value={reactOutput}
+            //@ts-ignore
             options={OUTPUT_MONACO_OPTIONS}
           />
         </div>
