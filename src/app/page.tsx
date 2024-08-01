@@ -26,19 +26,26 @@ export default function Home() {
   const [hbsCode, setHbsCode] = useState(DEFAULT_HBS);
   const [reactOutput, setReactOutput] = useState("");
   const [isCoverting, setConverting] = useState(false);
-  const buttonColor = "red";
+  const [error, setError] = useState<string | null>(null);
 
   const convert = useCallback(() => {
     let payload = JSON.stringify({ params: { handlebars: hbsCode } });
-    console.log("payload = ", payload);
     let sse = new SSE("/api/convert", {
       method: "POST",
       payload,
     });
 
     setReactOutput("");
+    setError(null);
     let appending = false;
     let buffer = "";
+
+    sse.addEventListener("error", (event: any) => {
+      console.error("SSE error", event);
+      setError(`Convert error: ${JSON.stringify(event)}`);
+      setConverting(false);
+    });
+
     sse.addEventListener("message", (event: any) => {
       if (event.data) {
         let d: any = JSON.parse(event.data);
@@ -70,7 +77,7 @@ export default function Home() {
 
     setConverting(true);
     sse.stream();
-  }, [hbsCode, reactOutput, setReactOutput]);
+  }, [hbsCode, reactOutput, setReactOutput, setError]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -117,6 +124,9 @@ export default function Home() {
           )}
 
           {isCoverting && <div>Converting...</div>}
+          {error && (
+            <div className="text-red-500">Convert error, check console</div>
+          )}
         </div>
       </div>
     </div>
