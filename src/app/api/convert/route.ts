@@ -1,10 +1,13 @@
 import { Readable } from "node:stream";
 
 export async function POST(req: Request, res: Response) {
+  const bodyText = await req.text();
   const modelResponse = await fetch("https://app-bwdy9p-7wesk6.a.mixlayer.ai", {
     method: "POST",
+    body: bodyText,
     headers: {
       Authorization: `Bearer ${process.env.MIXLAYER_APP_TOKEN}`,
+      "Content-Type": "application/json",
     },
   });
 

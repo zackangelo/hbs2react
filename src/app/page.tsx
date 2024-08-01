@@ -21,18 +21,23 @@ const OUTPUT_MONACO_OPTIONS = {
 };
 
 export default function Home() {
+  const [hbsCode, setHbsCode] = useState(DEFAULT_HBS);
   const [reactOutput, setReactOutput] = useState("");
   const [isCoverting, setConverting] = useState(false);
 
   const convert = useCallback(() => {
-    let sse = new SSE("/api/convert", { method: "POST" });
+    let payload = JSON.stringify({ params: { handlebars: hbsCode } });
+    console.log("payload = ", payload);
+    let sse = new SSE("/api/convert", {
+      method: "POST",
+      payload,
+    });
 
     setReactOutput("");
     let appending = false;
     let buffer = "";
     sse.addEventListener("message", (event: any) => {
       if (event.data) {
-        console.log("event", event);
         let d: any = JSON.parse(event.data);
 
         if (d.done) {
@@ -49,7 +54,6 @@ export default function Home() {
           }
 
           if (appending) {
-            console.log("appending", JSON.stringify(d.text));
             setReactOutput((prev) => prev + d.text);
           }
 
@@ -63,7 +67,7 @@ export default function Home() {
 
     setConverting(true);
     sse.stream();
-  }, [reactOutput, setReactOutput]);
+  }, [hbsCode, reactOutput, setReactOutput]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -74,7 +78,12 @@ export default function Home() {
             height="100%"
             width="100%"
             defaultLanguage="handlebars"
-            value={DEFAULT_HBS}
+            value={hbsCode}
+            onChange={(value) => {
+              if (value) {
+                setHbsCode(value);
+              }
+            }}
             options={MONACO_OPTIONS}
           />
         </div>
