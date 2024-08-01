@@ -1,15 +1,17 @@
-import { Readable } from "node:stream";
-
+export const maxDuration = 300;
 export async function POST(req: Request, res: Response) {
   const bodyText = await req.text();
-  const modelResponse = await fetch("https://app-bwdy9p-7wesk6.a.mixlayer.ai", {
-    method: "POST",
-    body: bodyText,
-    headers: {
-      Authorization: `Bearer ${process.env.MIXLAYER_APP_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
+  const modelResponse = await fetch(
+    `https://${process.env.MIXLAYER_APP_HOST}`,
+    {
+      method: "POST",
+      body: bodyText,
+      headers: {
+        Authorization: `Bearer ${process.env.MIXLAYER_APP_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!modelResponse.ok) {
     return Response.json({ error: "model fetch failed" }, { status: 500 });
@@ -21,8 +23,6 @@ export async function POST(req: Request, res: Response) {
   }
 
   // @ts-ignore
-  //   Readable.fromWeb(modelResponse.body.getReader()).pipe(res);
-
   return new Response(modelResponse.body, {
     status: 200,
     headers: {
