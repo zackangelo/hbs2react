@@ -36,8 +36,6 @@ export default function Home() {
 
     setReactOutput("");
     setError(null);
-    let appending = false;
-    let buffer = "";
 
     sse.addEventListener("error", (event: any) => {
       console.error("SSE error", event);
@@ -55,21 +53,8 @@ export default function Home() {
           return;
         }
 
-        if (d.text) {
-          buffer = buffer + d.text;
-
-          if (appending && d.text == "``") {
-            appending = false;
-          }
-
-          if (appending) {
-            setReactOutput((prev) => prev + d.text);
-          }
-
-          // TODO remove this hack after mixlayer supports hidden tokens
-          if (buffer.trimEnd().endsWith("```jsx")) {
-            appending = true;
-          }
+        if (d.text && d.hidden !== true) {
+          setReactOutput((prev) => prev + d.text);
         }
       }
     });
