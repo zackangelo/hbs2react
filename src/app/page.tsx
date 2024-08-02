@@ -1,7 +1,6 @@
 "use client";
 
 import { Editor } from "@monaco-editor/react";
-import { read } from "fs";
 import { useCallback, useState } from "react";
 import SSE from "./sse";
 import { SparklesIcon } from "@heroicons/react/24/outline";
