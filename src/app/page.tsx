@@ -54,7 +54,7 @@ export default function Home() {
         }
 
         if (d.text && d.hidden !== true) {
-          setReactOutput((prev) => (prev + d.text).replace("```", "").trim());
+          setReactOutput((prev) => (prev + d.text).replace("```", ""));
         }
       }
     });
