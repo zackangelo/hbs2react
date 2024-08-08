@@ -28,7 +28,10 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const convert = useCallback(() => {
-    let payload = JSON.stringify({ params: { handlebars: hbsCode } });
+    let payload = JSON.stringify({
+      stream: true,
+      params: { handlebars: hbsCode },
+    });
     let sse = new SSE("/api/convert", {
       method: "POST",
       payload,
